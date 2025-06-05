@@ -14,15 +14,15 @@ namespace MyCodeGenerator
             context.RegisterPostInitializationOutput(ctx =>
             {
                 ctx.AddSource("AutoExtendAttribute.g.cs", SourceText.From(@"
-                using System;
-                [AttributeUsage(AttributeTargets.Class)]
-                public class AutoExtendAttribute : Attribute { }
+using System;
+[AttributeUsage(AttributeTargets.Class)]
+public class AutoExtendAttribute : Attribute { }
             ", Encoding.UTF8));
 
                 ctx.AddSource("ExtendedAttribute.g.cs", SourceText.From(@"
-                using System;
-                [AttributeUsage(AttributeTargets.Class)]
-                public class ExtendedAttribute : Attribute { }
+using System;
+[AttributeUsage(AttributeTargets.Class)]
+public class ExtendedAttribute : Attribute { }
             ", Encoding.UTF8));
             });
 
@@ -30,13 +30,13 @@ namespace MyCodeGenerator
             context.RegisterPostInitializationOutput(ctx =>
             {
                 ctx.AddSource("HelloWorld.g.cs", SourceText.From(@"
-                namespace Generated
-                {
-                    public class HelloWorld
-                    {
-                        public string Message => ""Hello from Source Generator!"";
-                    }
-                }
+namespace Generated
+{
+    public class HelloWorld
+    {
+        public string Message => ""Hello from Source Generator!"";
+    }
+}
             ", Encoding.UTF8));
             });
 
@@ -53,11 +53,18 @@ namespace MyCodeGenerator
                 var ns = classSymbol.ContainingNamespace.ToDisplayString();
                 var name = classSymbol.Name;
                 var source = $@"
-                namespace {ns}
-                {{
-                    [Extended]
-                    partial class {name} {{ }}
-                }}
+namespace {ns}
+{{
+    [Extended]
+    partial class {name} {{
+        // This class is extended
+        // by the source generator with the [Extended] attribute.
+
+        public void SayHello() {{
+            Console.WriteLine(""Hello from the extended class!"");
+        }}
+    }}
+}}
             ";
                 spc.AddSource($"{name}_Extended.g.cs", SourceText.From(source, Encoding.UTF8));
             });

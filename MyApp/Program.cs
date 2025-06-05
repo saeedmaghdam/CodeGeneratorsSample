@@ -12,3 +12,6 @@ foreach (var attr in attrs)
 {
     Console.WriteLine($"MyService has attribute: {attr.GetType().Name}");
 }
+
+var myService = new MyService();
+myService.SayHello();
